@@ -3,7 +3,7 @@ import logging
 
 github_io_repos = [
     "~/sanskrit/matturu",
-    "~/sanskrit/mbh-audio",
+    "~/sanskrit/projects",
     "~/sanskrit/people",
     "~/sanskrit-coders/site",
     "~/vvasuki-git/notes",
