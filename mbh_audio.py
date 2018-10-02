@@ -15,8 +15,8 @@ ARCHIVE_ITEM_NAME = "mahAbhArata-mUla-paThanam-GP"
 LOCAL_REPO_PATH = "/home/vvasuki/mahabharata-audio-2018/"
 SPREADSHEET_ID = "1sNH1AWhhoa5VATqMdLbF652s7srTG0Raa6K-sCwDR-8"
 SPREADSHEET_RANGE_KARYAAVALII = "कार्यावली!A1:G10"
-SPREADSHEET_ID = '1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms'
-SPREADSHEET_RANGE_KARYAAVALII = 'Class Data!A2:E'
+# SPREADSHEET_ID = '1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms'
+# SPREADSHEET_RANGE_KARYAAVALII = 'Class Data!A2:E'
 local_mp3_file_paths = sorted(glob.glob(os.path.join(LOCAL_REPO_PATH, "parva*", "mp3", "*.mp3")))
 
 def update_archive_item():
@@ -50,24 +50,23 @@ def fix_metadata():
         audiofile.tag.save()
 
 def get_author_data():
-    from googleapiclient.discovery import build
-    from oauth2client import file, client, tools
-    from httplib2 import Http
-    SCOPES = 'https://www.googleapis.com/auth/spreadsheets.readonly'
-    store = file.Storage('local_token.json')
-    creds = store.get()
-    if not creds or creds.invalid:
-        flow = client.flow_from_clientsecrets('/home/vvasuki/sysconf/kunchikA/google_sheets_credentials_sanskritnlp.json', SCOPES)
-        creds = tools.run_flow(flow, store)
-    # Added cache_discovery=False following online tip to resolve some error. But this leads to an empty result.
-    service = build('sheets', 'v4', http=creds.authorize(Http()), cache_discovery=False)
+    import gspread
+    # Obtained from https://console.developers.google.com/apis/credentials?project=sanskritnlp
+    GOOGLE_KEY = '/home/vvasuki/sysconf/kunchikA/google_service_account_key_sanskritnlp.json'
+    SCOPES = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
+    from oauth2client.service_account import ServiceAccountCredentials
+    creds = ServiceAccountCredentials.from_json_keyfile_name(GOOGLE_KEY, SCOPES)
 
-    result = service.spreadsheets().values().get(spreadsheetId=SPREADSHEET_ID,
-                                                 range=SPREADSHEET_RANGE_KARYAAVALII).execute()
-    logging.info(str(result))
-    kaaryaavalii_values = result.get('values', [])
-    logging.info(kaaryaavalii_values)
-    logging.info(pprint.pformat(kaaryaavalii_values))
+    client = gspread.authorize(creds)
+    sheet_book = client.open_by_key(SPREADSHEET_ID)
+    # Log statements don't seem to work in this function!
+    logging.info(sheet_book.worksheets())
+    # print(sheet_book.worksheets())
+    kaaryaavalii_sheet = sheet_book.worksheet("कार्यावली")
+    print(sheet_book.worksheets())
+    print(kaaryaavalii_sheet.col_values(col=1))
+    print(kaaryaavalii_sheet)
+    # logging.info(str(kaaryaavalii_sheet))
 
 get_author_data()
 # update_archive_item()
