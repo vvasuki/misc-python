@@ -1,8 +1,11 @@
 import subprocess
 import logging
-
+logging.basicConfig(
+    level=logging.DEBUG,
+    format="%(levelname)s: %(asctime)s %(message)s"
+)
 github_io_repos = [
-    "~/sanskrit/matturu",
+    "~/sanskrit/groups",
     "~/sanskrit/projects",
     "~/sanskrit/people",
     "~/sanskrit-coders/site",
@@ -14,6 +17,6 @@ github_io_repos = [
 ]
 
 for repo in github_io_repos:
-    logging.info(subprocess.check_output(
+    logging.info(str(subprocess.check_output(
         "cd %s; %s" % (repo, 'git commit --allow-empty -m "Force rebuild of site"'),
-        stderr=subprocess.STDOUT, shell=True))
+        stderr=subprocess.STDOUT, shell=True), 'utf-8'))
