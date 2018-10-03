@@ -1,9 +1,11 @@
-import subprocess
 import logging
 logging.basicConfig(
     level=logging.DEBUG,
-    format="%(levelname)s: %(asctime)s %(message)s"
+    format="%(levelname)s: %(asctime)s %(filename)s:%(lineno)d %(message)s"
 )
+
+import subprocess
+
 github_io_repos = [
     "~/sanskrit/groups",
     "~/sanskrit/projects",
