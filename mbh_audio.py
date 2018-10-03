@@ -73,6 +73,7 @@ def fix_metadata(adhyaaya_df):
         audiofile.tag.album = "महाभारतम् mahAbhAratam - parva %s" % (parva_id)
         audiofile.tag.album_artist = "वेदव्यासः vedavyAsa"
         audiofile.tag.save()
+        r = internetarchive.modify_metadata(ARCHIVE_ITEM_NAME, metadata=dict(title=audiofile.tag.title, album=audiofile.tag.album, album_artist = audiofile.tag.album_artist, artist = audiofile.tag.artist), target=basename)
 
 def get_adhyaaya_data():
     # Obtained from https://console.developers.google.com/apis/credentials?project=sanskritnlp
@@ -92,4 +93,4 @@ def get_adhyaaya_data():
     return adhyaaya_data
 
 fix_metadata(get_adhyaaya_data())
-update_archive_item(overwrite_all=True)
+# update_archive_item(overwrite_all=False)
