@@ -32,10 +32,8 @@ logging.info("Got %d files" % (len(local_mp3_file_paths)))
 def update_archive_item(overwrite_all=False):
     archive_item = internetarchive.get_item(ARCHIVE_ITEM_NAME)
     logging.info(archive_item.identifier)
-    
     local_mp3_file_basenames = list(map(os.path.basename, local_mp3_file_paths))
-    
-    original_item_files = list(filter(lambda x: x["source"] == "original" and not x["name"].startswith(archive_item.identifier), archive_item.files))
+    original_item_files = list(filter(lambda x: x["source"] == "original" and not x["name"].startswith(archive_item.identifier) and not x["name"].startswith("_"), archive_item.files))
     original_item_file_names = sorted(map(lambda x: x["name"], original_item_files))
     obsolete_original_item_file_names = list(filter(lambda x: x not in local_mp3_file_basenames, original_item_file_names))
     
@@ -59,7 +57,12 @@ verify=False)
             logging.warning("Found nothing to update!")
     
 
-def fix_metadata(adhyaaya_df):
+def fix_metadata(adhyaaya_df, update_archive=False):
+    archive_item = internetarchive.get_item(ARCHIVE_ITEM_NAME)
+    logging.info(archive_item.identifier)
+    local_mp3_file_basenames = list(map(os.path.basename, local_mp3_file_paths))
+    original_item_files = list(filter(lambda x: x["source"] == "original" and not x["name"].startswith(archive_item.identifier), archive_item.files))
+    original_item_file_names = sorted(map(lambda x: x["name"], original_item_files))
     for mp3_path in local_mp3_file_paths:
         basename = os.path.basename(mp3_path)
         parva_adhyaaya_part_id = os.path.splitext(basename)[0]
@@ -73,7 +76,8 @@ def fix_metadata(adhyaaya_df):
         audiofile.tag.album = "महाभारतम् mahAbhAratam - parva %s" % (parva_id)
         audiofile.tag.album_artist = "वेदव्यासः vedavyAsa"
         audiofile.tag.save()
-        r = internetarchive.modify_metadata(ARCHIVE_ITEM_NAME, metadata=dict(title=audiofile.tag.title, album=audiofile.tag.album, album_artist = audiofile.tag.album_artist, artist = audiofile.tag.artist), target=basename)
+        if update_archive and (basename in original_item_file_names):
+            r = internetarchive.modify_metadata(ARCHIVE_ITEM_NAME, metadata=dict(title=audiofile.tag.title, album=audiofile.tag.album, album_artist = audiofile.tag.album_artist, artist = audiofile.tag.artist, creator=audiofile.tag.artist), target=basename)
 
 def get_adhyaaya_data():
     # Obtained from https://console.developers.google.com/apis/credentials?project=sanskritnlp
@@ -92,5 +96,5 @@ def get_adhyaaya_data():
     logging.debug(adhyaaya_data.loc["001-001", "पठिता"])
     return adhyaaya_data
 
-fix_metadata(get_adhyaaya_data())
-# update_archive_item(overwrite_all=False)
+# fix_metadata(get_adhyaaya_data())
+update_archive_item(overwrite_all=False)
