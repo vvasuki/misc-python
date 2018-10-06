@@ -11,10 +11,10 @@ github_io_repos = [
     "~/sanskrit/projects",
     "~/sanskrit/people",
     "~/sanskrit-coders/site",
+    "~/sanskrit-coders/sanskrit-data",
     "~/vvasuki-git/notes",
     "~/vvasuki-git/site",
     "~/xetram/rekhaa-catering",
-    "~/sanskrit/people",
     "~/hindutva/site",
 ]
 
