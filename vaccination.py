@@ -6,6 +6,8 @@ import sys
 from datetime import datetime
 from urllib.request import urlopen
 from urllib.request import Request
+from sty import fg, bg, ef, rs
+
 
 HDRS = {
   "accept": "application/json",
@@ -46,10 +48,11 @@ def get_appt_locs_for_district_ids(district_ids=[265, 276, 294], age=45, min_slo
           print("""\
           =======
           {} available at {} in {} {} with pincode {} on {} 
-          {} slots - doese-1 {}, dose-2 {}
+          {} slots - dose1 {}, dose2 {}
           Fee type: {}
-          """.format(session["vaccine"], center["name"], center["district_name"], center["state_name"], 
-                     center["pincode"], session["date"], session["available_capacity"], session["available_capacity_dose1"], session["available_capacity_dose2"], 
+          """.format(fg.green + session["vaccine"] + fg.rs, center["name"], center["district_name"], center["state_name"],
+                     fg.blue + str(center["pincode"]) + fg.rs, session["date"],
+                     fg.red + str(session["available_capacity"]) + fg.rs, session["available_capacity_dose1"], session["available_capacity_dose2"], 
                      center["fee_type"]))
 
 
