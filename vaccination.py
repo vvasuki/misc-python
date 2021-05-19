@@ -35,7 +35,7 @@ def get_district_ids_for_state(state_id):
   url = DISTRICTS_URL_PREFIX.format(state_id)
   return [district["district_id"] for district in make_request(url, HDRS)["districts"]]
 
-def get_appt_locs_for_district_ids(district_ids=[265, 276, 294], age=45, min_slots=0):
+def get_appt_locs_for_district_ids(district_ids=[265, 276, 294], age=45, dose_type="available_capacity_dose1", min_slots=0):
   APPT_URL_PATTERN = "https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByDistrict?district_id={}&date={}"
   today = datetime.now().strftime("%d-%m-%Y")
 
@@ -44,7 +44,7 @@ def get_appt_locs_for_district_ids(district_ids=[265, 276, 294], age=45, min_slo
   for district_id in district_ids:
     for center in make_request(APPT_URL_PATTERN.format(district_id, today), HDRS)["centers"]:
       for session in center["sessions"]:
-        if session["min_age_limit"] <= age and session["available_capacity"] >= min_slots:
+        if session["min_age_limit"] <= age and session[dose_type] >= min_slots:
           print("""\
           =======
           {} at {} {} in {}, {} on {} 
@@ -57,7 +57,7 @@ def get_appt_locs_for_district_ids(district_ids=[265, 276, 294], age=45, min_slo
 
 def continuous_query():
   while True:
-    get_appt_locs_for_district_ids(age=18, min_slots=0)
+    get_appt_locs_for_district_ids(age=18, min_slots=1)
     sys.stdout.flush()
     time.sleep(60)
 
