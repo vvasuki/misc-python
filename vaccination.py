@@ -47,12 +47,11 @@ def get_appt_locs_for_district_ids(district_ids=[265, 276, 294], age=45, min_slo
         if session["min_age_limit"] <= age and session["available_capacity"] >= min_slots:
           print("""\
           =======
-          {} available at {} in {} {} with pincode {} on {} 
+          {} at {} {} in {}, {} on {} 
           {} slots - dose1 {}, dose2 {}
           Fee type: {}
-          """.format(fg.green + session["vaccine"] + fg.rs, center["name"], center["district_name"], center["state_name"],
-                     fg.blue + str(center["pincode"]) + fg.rs, session["date"],
-                     fg.red + str(session["available_capacity"]) + fg.rs, session["available_capacity_dose1"], session["available_capacity_dose2"], 
+          """.format(fg.green + session["vaccine"] + fg.rs, center["name"], fg.blue + str(center["pincode"]) + fg.rs, center["district_name"], center["state_name"], session["date"],
+                     fg.blue + str(session["available_capacity"]) + fg.rs, bg.yellow + str(session["available_capacity_dose1"]) + bg.rs, session["available_capacity_dose2"], 
                      center["fee_type"]))
 
 
