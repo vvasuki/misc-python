@@ -55,13 +55,14 @@ def get_appt_locs_for_district_ids(district_ids=[265, 276, 294], age=45, dose_ty
                      center["fee_type"]))
 
 
-def continuous_query():
+def continuous_query(district_ids, age, min_slots, dose_type):
   while True:
-    get_appt_locs_for_district_ids(age=18, min_slots=1)
+    get_appt_locs_for_district_ids(district_ids=district_ids, age=age, min_slots=min_slots, dose_type=dose_type)
     sys.stdout.flush()
     time.sleep(60)
 
 
 if __name__ == '__main__':
   # get_appt_locs_for_district_ids(age=18, min_slots=1)
-  continuous_query()
+  # continuous_query(district_ids=[265, 276, 294], age=18, dose_type="available_capacity_dose1", min_slots=1)
+  continuous_query(district_ids=[265, 276, 294], age=18, dose_type="available_capacity", min_slots=1)
