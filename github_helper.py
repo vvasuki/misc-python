@@ -33,18 +33,32 @@ def force_site_rebuild():
       stderr=subprocess.STDOUT, shell=True), 'utf-8'))
 
 
-def set_submodule_branches():
-  command = "git submodule foreach -q --recursive 'git checkout -b $(git config -f $toplevel/.gitmodules submodule.$name.branch || echo master) || git checkout $(git config -f $toplevel/.gitmodules submodule.$name.branch || echo master)'"
-
+def run_command_in_submodule_repos(command):
   for dir in os.listdir(GIT_BASE):
     full_path = os.path.join(GIT_BASE, dir)
     for sub_dir in os.listdir(full_path):
+      if sub_dir in ["rahaShTippanyaH"]:
+        logging.info(f"Skipping {sub_dir}")
+        continue
       full_path = os.path.join(GIT_BASE, dir, sub_dir)
       if not os.path.exists(os.path.join(full_path, ".gitmodules")):
         continue
       logging.info(str(subprocess.check_output(
         f"cd {full_path}; {command}",
         stderr=subprocess.STDOUT, shell=True), 'utf-8'))
+
+
+def pull_all():
+  command = "git pull --recurse-submodules"
+  run_command_in_submodule_repos(command=command)
+
+def unshallow_all():
+  command = "git submodule foreach -q --recursive 'git fetch --unshallow'"
+  run_command_in_submodule_repos(command=command)
+
+def set_submodule_branches():
+  command = "git submodule foreach -q --recursive 'git checkout -b $(git config -f $toplevel/.gitmodules submodule.$name.branch || echo master) || git checkout $(git config -f $toplevel/.gitmodules submodule.$name.branch || echo master)'"
+  run_command_in_submodule_repos(command=command)
 
 
 def reclone_all():
@@ -66,5 +80,7 @@ def reclone_all():
 
 
 if __name__ == '__main__':
-  set_submodule_branches()
+  # set_submodule_branches()
+  pull_all()
+  # unshallow_all()
   # reclone_all()
