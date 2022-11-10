@@ -69,9 +69,12 @@ def set_submodule_branches():
 def reclone_all_with_submods():
   for dir in os.listdir(GIT_BASE):
     full_path = os.path.join(GIT_BASE, dir)
-    if not dir in ["vishvAsa"]:
+    if dir in ["vishvAsa", "sanskrit-coders"]:
       logging.info(f"Skipping {full_path}")
       continue
+    # if not dir in []:
+    #   logging.info(f"Skipping {full_path}")
+    #   continue
     sub_dirs = list(os.listdir(full_path))
     if dir in ["vishvAsa"]:
       sub_dirs = list(itertools.dropwhile(lambda x: x!="vedAH_Rk", sub_dirs))
@@ -99,8 +102,8 @@ def reclone_all_with_submods():
 
 
 if __name__ == '__main__':
-  set_submodule_branches()
+  # set_submodule_branches()
   # pull_all()
-  # reclone_all_with_submods()
+  reclone_all_with_submods()
   # unshallow_all()
   # reclone_all()
