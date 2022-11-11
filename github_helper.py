@@ -40,9 +40,9 @@ def run_command_in_submodule_repos(command):
     full_path = os.path.join(GIT_BASE, dir)
     for sub_dir in os.listdir(full_path):
       logging.info(f"Processing {full_path}")
-      if sub_dir in ["rahaShTippanyaH"]:
-        logging.info(f"Skipping {sub_dir}")
-        continue
+      # if sub_dir in ["rahaShTippanyaH"]:
+      #   logging.info(f"Skipping {sub_dir}")
+      #   continue
       full_path = os.path.join(GIT_BASE, dir, sub_dir)
       if not os.path.exists(os.path.join(full_path, ".gitmodules")):
         continue
@@ -102,8 +102,8 @@ def reclone_all_with_submods():
 
 
 if __name__ == '__main__':
-  # set_submodule_branches()
+  set_submodule_branches()
   # pull_all()
-  reclone_all_with_submods()
+  # reclone_all_with_submods()
   # unshallow_all()
   # reclone_all()
