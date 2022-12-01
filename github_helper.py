@@ -35,10 +35,12 @@ def force_site_rebuild():
       stderr=subprocess.STDOUT, shell=True), 'utf-8'))
 
 
-def run_command_in_submodule_repos(command):
+def run_command_in_submodule_repos(command, sub_dirs=None):
   for dir in os.listdir(GIT_BASE):
     full_path = os.path.join(GIT_BASE, dir)
     for sub_dir in os.listdir(full_path):
+      if sub_dirs is not None and sub_dir not in sub_dirs:
+        continue
       logging.info(f"Processing {full_path}")
       # if sub_dir in ["rahaShTippanyaH"]:
       #   logging.info(f"Skipping {sub_dir}")
@@ -59,11 +61,11 @@ def unshallow_all():
   command = "git submodule foreach -q --recursive 'git fetch --unshallow'"
   run_command_in_submodule_repos(command=command)
 
-def set_submodule_branches():
+def set_submodule_branches(sub_dirs):
   command = "git submodule foreach -q --recursive 'git checkout -b $(git config -f $toplevel/.gitmodules submodule.$name.branch || echo master) || git checkout $(git config -f $toplevel/.gitmodules submodule.$name.branch || echo master)'"
-  run_command_in_submodule_repos(command=command)
+  run_command_in_submodule_repos(command=command, sub_dirs=sub_dirs)
   command = "git submodule foreach -q --recursive 'git branch --set-upstream-to=origin/$(git config -f $toplevel/.gitmodules submodule.$name.branch || echo master) || git checkout $(git config -f $toplevel/.gitmodules submodule.$name.branch || echo master)'"
-  run_command_in_submodule_repos(command=command)
+  run_command_in_submodule_repos(command=command, sub_dirs=sub_dirs)
 
 
 def reclone_all_with_submods():
@@ -102,7 +104,7 @@ def reclone_all_with_submods():
 
 
 if __name__ == '__main__':
-  set_submodule_branches()
+  set_submodule_branches(sub_dirs=["raw_etexts"])
   # pull_all()
   # reclone_all_with_submods()
   # unshallow_all()
