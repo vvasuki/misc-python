@@ -21,7 +21,7 @@ github_io_repos = [
   "hindutva/site",
 ]
 
-github_io_repos_vishvaasa = ["note", "site", "AgamaH", "jyotiSham", "mImAMsA", "rahaShTippanyaH", "vedAH_Rk", "bhAShAntaram", "kalpAntaram", "notes", "sanskrit", "vedAH_sAma", "devaH", "kannaDa", "pALi", "tipiTaka", "vedAH_yajuH", "vvasuki.github.io"]
+github_io_repos_vishvaasa = ["note", "site", "AgamaH", "jyotiSham", "mImAMsA", "rahaShTippanyaH", "vedAH_Rk", "bhAShAntaram", "kalpAntaram", "notes", "sanskrit", "vedAH_sAma", "devaH", "kannaDa", "pALi", "tipiTaka", "vedAH_yajuH", "vishvAsa.github.io"]
 
 
 GIT_BASE = "/home/vvasuki/gitland"
@@ -42,9 +42,9 @@ def run_command_in_submodule_repos(command, sub_dirs=None):
       if sub_dirs is not None and sub_dir not in sub_dirs:
         continue
       logging.info(f"Processing {full_path}")
-      # if sub_dir in ["rahaShTippanyaH"]:
-      #   logging.info(f"Skipping {sub_dir}")
-      #   continue
+      if sub_dir in ["tipiTaka"]:
+        logging.info(f"Skipping {sub_dir}")
+        continue
       full_path = os.path.join(GIT_BASE, dir, sub_dir)
       if not os.path.exists(os.path.join(full_path, ".gitmodules")):
         continue
@@ -55,6 +55,10 @@ def run_command_in_submodule_repos(command, sub_dirs=None):
 
 def pull_all():
   command = "git pull --recurse-submodules"
+  run_command_in_submodule_repos(command=command)
+
+def fsck_all():
+  command = "git fsck"
   run_command_in_submodule_repos(command=command)
 
 def unshallow_all():
@@ -105,6 +109,7 @@ def reclone_all_with_submods():
 
 if __name__ == '__main__':
   set_submodule_branches(sub_dirs=["raw_etexts"])
+  # fsck_all()
   # pull_all()
   # reclone_all_with_submods()
   # unshallow_all()
