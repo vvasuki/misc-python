@@ -53,17 +53,17 @@ def run_command_in_submodule_repos(command, sub_dirs=None):
         stderr=subprocess.STDOUT, shell=True), 'utf-8'))
 
 
-def pull_all():
+def pull_all(sub_dirs=None):
   command = "git pull --recurse-submodules"
-  run_command_in_submodule_repos(command=command)
+  run_command_in_submodule_repos(command=command, sub_dirs=sub_dirs)
 
-def fsck_all():
+def fsck_all(sub_dirs=None):
   command = "git fsck"
-  run_command_in_submodule_repos(command=command)
+  run_command_in_submodule_repos(command=command, sub_dirs=sub_dirs)
 
-def unshallow_all():
+def unshallow_all(sub_dirs=None):
   command = "git submodule foreach -q --recursive 'git fetch --unshallow'"
-  run_command_in_submodule_repos(command=command)
+  run_command_in_submodule_repos(command=command, sub_dirs=sub_dirs)
 
 def set_submodule_branches(sub_dirs):
   command = "git submodule foreach -q --recursive 'git checkout -b $(git config -f $toplevel/.gitmodules submodule.$name.branch || echo master) || git checkout $(git config -f $toplevel/.gitmodules submodule.$name.branch || echo master)'"
