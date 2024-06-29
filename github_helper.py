@@ -65,7 +65,7 @@ def unshallow_all(sub_dirs=None):
   command = "git submodule foreach -q --recursive 'git fetch --unshallow'"
   run_command_in_submodule_repos(command=command, sub_dirs=sub_dirs)
 
-def set_submodule_branches(sub_dirs):
+def set_submodule_branches(sub_dirs=None):
   command = "git submodule foreach -q --recursive 'git checkout -b $(git config -f $toplevel/.gitmodules submodule.$name.branch || echo master) || git checkout $(git config -f $toplevel/.gitmodules submodule.$name.branch || echo master)'"
   run_command_in_submodule_repos(command=command, sub_dirs=sub_dirs)
   command = "git submodule foreach -q --recursive 'git branch --set-upstream-to=origin/$(git config -f $toplevel/.gitmodules submodule.$name.branch || echo master) || git checkout $(git config -f $toplevel/.gitmodules submodule.$name.branch || echo master)'"
@@ -108,7 +108,9 @@ def reclone_all_with_submods():
 
 
 if __name__ == '__main__':
-  set_submodule_branches(sub_dirs=["raw_etexts"])
+  pass
+  # set_submodule_branches(sub_dirs=["raw_etexts"])
+  set_submodule_branches()
   # fsck_all()
   # pull_all()
   # reclone_all_with_submods()
