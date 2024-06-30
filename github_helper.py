@@ -11,28 +11,34 @@ logging.basicConfig(
   level=logging.DEBUG,
   format="%(levelname)s:%(asctime)s:%(module)s:%(lineno)d %(message)s")
 
-github_io_repos = [
-  "sanskrit/groups",
-  "sanskrit/projects",
-  "sanskrit/people",
-  "sanskrit-coders/site",
-  "sanskrit-coders/sanskrit-data",
-  "xetram/rekhaa-catering",
-  "hindutva/site",
-]
+website_repos = {
+  "hindutva": ["hindutva.github.io", "mantra-manuals", ],
+  "become-hindu": ["become-hindu.github.io",  ],
+  "sanskrit": ["sanskrit.github.io", ],
+  "sanskrit_coders": ["sanskrit-coders.github.io"] ,
+  "vishvAsa": ["note", "site", "AgamaH", "jyotiSham", "mImAMsA", "rahaShTippanyaH", "vedAH_Rk", "bhAShAntaram", "kalpAntaram", "notes", "sanskrit", "vedAH_sAma", "devaH", "kannaDa", "pALi", "tipiTaka", "vedAH_yajuH", "vishvAsa.github.io"],
+}
 
-github_io_repos_vishvaasa = ["note", "site", "AgamaH", "jyotiSham", "mImAMsA", "rahaShTippanyaH", "vedAH_Rk", "bhAShAntaram", "kalpAntaram", "notes", "sanskrit", "vedAH_sAma", "devaH", "kannaDa", "pALi", "tipiTaka", "vedAH_yajuH", "vishvAsa.github.io"]
-
+reg_repos = {
+  "sanskrit-coders": ["sanskrit-data", "autokey-scripts_sa", "db-interface", "chandas", "audio_utils", 
+                      "sanskrit_data", "video_curation", "audio_curation", 
+                      "curation_utils", "autokey-scripts_sa", 
+                      "rss-feeds", "doc_curation", ],
+  "sanskrit": ["m17n-db-indic",  "sanskrit-fonts", "indic_transliteration_scala",  "sanscript.js",],
+  "indic-dict": ["stardict-sanskrit", "stardict-tibetan", "stardict-test", "stardict-index", "stardict-english", "stardict-sanskrit-vyAkaraNa", "stardict-sanskrit-kAvya", "stardict-hindi", "stardict-dictionary-updater", "stardict-sanskrit-student", "stardict-telugu", "stardict-malayalam", "stardict-pali", "Stardict dictionaries for Pali and Buddhism.", "stardict-ayurveda", "stardict-marathi", "stardict-tamil", "stardict-gujarati", "stardict-oriya", "stardict-bengali", "stardict-assamese", "stardict-panjabi", "stardict-sinhala", "stardict-prakrit", "stardict-kashmiri", "stardict-kannada", "stardict-divehi", "stardict-nepali", "stardict-urdu", "stardict-indic-update-aur", "StarDict-1", "SanskritDictionariesInstaller", "stardict", "jstardict", "sanDict", "pystardict", "dict-tools", "dict-curation", "indic-dict.github.io", "dsal-scraper", "osx-sanskrit", ],
+  "indic-transliteration": ["indic_transliteration_py", "m17n-db-indic",  "sanskrit-fonts", "indic_transliteration_scala",  "sanscript.js"],
+}
 
 GIT_BASE = "/home/vvasuki/gitland"
 
 
 def force_site_rebuild():
-  for repo in github_io_repos:
-    repo_path = os.path.join(GIT_BASE, repo)
-    logging.info(str(subprocess.check_output(
-      f'cd {repo_path} git commit --allow-empty -m "Force rebuild of site"',
-      stderr=subprocess.STDOUT, shell=True), 'utf-8'))
+  for group, repos in website_repos.items():
+    for repo in repos:
+      repo_path = os.path.join(GIT_BASE, group, repo)
+      logging.info(str(subprocess.check_output(
+        f'cd {repo_path} git commit --allow-empty -m "Force rebuild of site"',
+        stderr=subprocess.STDOUT, shell=True), 'utf-8'))
 
 
 def run_command_in_submodule_repos(command, sub_dirs=None):
@@ -42,9 +48,9 @@ def run_command_in_submodule_repos(command, sub_dirs=None):
       if sub_dirs is not None and sub_dir not in sub_dirs:
         continue
       logging.info(f"Processing {full_path}")
-      if sub_dir in ["tipiTaka"]:
-        logging.info(f"Skipping {sub_dir}")
-        continue
+      # if sub_dir in ["tipiTaka"]:
+      #   logging.info(f"Skipping {sub_dir}")
+      #   continue
       full_path = os.path.join(GIT_BASE, dir, sub_dir)
       if not os.path.exists(os.path.join(full_path, ".gitmodules")):
         continue
@@ -95,7 +101,7 @@ def reclone_all_with_submods():
       os.chdir(os.path.dirname(full_path))
       full_path_tmp = os.path.join(GIT_BASE, dir, sub_dir + "_tmp")
       shutil.rmtree(full_path_tmp, ignore_errors=True)
-      command = f"git clone --recurse-submodules {origin_url} {os.path.basename(full_path_tmp)}"
+      command = f"git clone --recurse-submodules -b master {origin_url} {os.path.basename(full_path_tmp)}"
       logging.info(str(subprocess.check_output(
         command,
         stderr=subprocess.STDOUT, shell=True), 'utf-8'))
