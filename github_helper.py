@@ -16,7 +16,8 @@ website_repos = {
   "become-hindu": ["become-hindu.github.io",  ],
   "sanskrit": ["sanskrit.github.io", ],
   "sanskrit_coders": ["sanskrit-coders.github.io"] ,
-  "vishvAsa": ["note", "site", "AgamaH", "jyotiSham", "mImAMsA", "rahaShTippanyaH", "vedAH_Rk", "bhAShAntaram", "kalpAntaram", "notes", "sanskrit", "vedAH_sAma", "devaH", "kannaDa", "pALi", "tipiTaka", "vedAH_yajuH", "vishvAsa.github.io"],
+  "vishvAsa": ["note", "vishvAsa.github.io", "AgamaH", "jyotiSham", "mImAMsA", "rahaShTippanyaH", "vedAH_Rk", "bhAShAntaram", "kalpAntaram", "notes", "sanskrit", "vedAH_sAma", "devaH", "kannaDa", "pALi", "tipiTaka", "vedAH_yajuH", "vishvAsa.github.io"],
+  "vvasuki-git": ["vvasuki.github.io"]
 }
 
 reg_repos = {
@@ -27,6 +28,10 @@ reg_repos = {
   "sanskrit": ["m17n-db-indic",  "sanskrit-fonts", "indic_transliteration_scala",  "sanscript.js",],
   "indic-dict": ["stardict-sanskrit", "stardict-tibetan", "stardict-test", "stardict-index", "stardict-english", "stardict-sanskrit-vyAkaraNa", "stardict-sanskrit-kAvya", "stardict-hindi", "stardict-dictionary-updater", "stardict-sanskrit-student", "stardict-telugu", "stardict-malayalam", "stardict-pali", "Stardict dictionaries for Pali and Buddhism.", "stardict-ayurveda", "stardict-marathi", "stardict-tamil", "stardict-gujarati", "stardict-oriya", "stardict-bengali", "stardict-assamese", "stardict-panjabi", "stardict-sinhala", "stardict-prakrit", "stardict-kashmiri", "stardict-kannada", "stardict-divehi", "stardict-nepali", "stardict-urdu", "stardict-indic-update-aur", "StarDict-1", "SanskritDictionariesInstaller", "stardict", "jstardict", "sanDict", "pystardict", "dict-tools", "dict-curation", "indic-dict.github.io", "dsal-scraper", "osx-sanskrit", ],
   "indic-transliteration": ["indic_transliteration_py", "m17n-db-indic",  "sanskrit-fonts", "indic_transliteration_scala",  "sanscript.js"],
+  "vvasuki-git": ["buildings", "jananANu", "misc-scala", "sysconf", 
+                  "furniture", "misc-c", "rahah", "vlc-addons", 
+                  "health", "misc-perl", "rahah-rare", 
+                  "html-to-markdown", "misc-python", "step-install-packages", ]
 }
 
 GIT_BASE = "/home/vvasuki/gitland"
