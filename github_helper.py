@@ -135,6 +135,9 @@ def clone_all_with_submods(groups=None, repos=None):
         if group == "vvasuki-git":
           full_path = full_path.replace("gitland/vvasuki/", "gitlandl/vvasuki-git/")
           origin_url = origin_url.replace("-git", "")
+        elif group == "indic-dict":
+          if repo.startswith("stardict-") and repo != "stardict-dictionary-updater":
+            full_path = full_path.replace("stardict-", "stardict/stardict-")
         if os.path.exists(full_path):
           logging.info("Skipping " + full_path)
           continue
