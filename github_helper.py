@@ -26,12 +26,14 @@ reg_repos = {
                       "curation_utils", "autokey-scripts_sa", 
                       "rss-feeds", "doc_curation", ],
   "sanskrit": ["ashtadhyayi_com_transforms", "raw_etexts_private", "telugu-texts",  "raw_etexts", "sanskrit-documents-dump",  "raw_etexts_english" ],
+  "jyotisham":  ["jyotisham.github.io", "jyotisha"], 
   "indic-dict": ["stardict-sanskrit", "stardict-tibetan", "stardict-test", "stardict-index", "stardict-english", "stardict-sanskrit-vyAkaraNa", "stardict-sanskrit-kAvya", "stardict-hindi", "stardict-dictionary-updater", "stardict-sanskrit-student", "stardict-telugu", "stardict-malayalam", "stardict-pali", "stardict-ayurveda", "stardict-marathi", "stardict-tamil", "stardict-gujarati", "stardict-oriya", "stardict-bengali", "stardict-assamese", "stardict-panjabi", "stardict-sinhala", "stardict-prakrit", "stardict-kashmiri", "stardict-kannada", "stardict-divehi", "stardict-nepali", "stardict-urdu", "stardict-indic-update-aur", "StarDict-1", "SanskritDictionariesInstaller", "stardict", "jstardict", "sanDict", "pystardict", "dict-tools", "dict-curation", "indic-dict.github.io", "dsal-scraper", "osx-sanskrit", ],
   "indic-transliteration": ["indic_transliteration_py", "m17n-db-indic",  "sanskrit-fonts", "indic_transliteration_scala",  "sanscript.js"],
   "vvasuki-git": ["buildings", "jananANu", "misc-scala", "sysconf", 
                   "furniture", "misc-c", "rahah", "vlc-addons", 
                   "health", "misc-perl", "rahah-rare", 
-                  "html-to-markdown", "misc-python", "step-install-packages", ]
+                  "html-to-markdown", "misc-python", "step-install-packages", ],
+  "hindu-comm": ["weblogs", "mail_stream_indology", "mags", "mail_stream_advaita-l", "samskrita", "bvparishat"]
 }
 
 GIT_BASE = "/home/vvasuki/gitland"
@@ -64,7 +66,7 @@ def run_command_in_submodule_repos(command, sub_dirs=None):
         stderr=subprocess.STDOUT, shell=True), 'utf-8'))
 
 
-def pull_all(sub_dirs=None):
+def pull_all(sub_dirs=None):  
   command = "git pull --recurse-submodules"
   run_command_in_submodule_repos(command=command, sub_dirs=sub_dirs)
 
