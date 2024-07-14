@@ -16,7 +16,7 @@ website_repos = {
   "become-hindu": ["become-hindu.github.io",  ],
   "sanskrit": ["sanskrit.github.io", ],
   "sanskrit-coders": ["sanskrit-coders.github.io"] ,
-  "vishvAsa": ["notes", "vishvAsa.github.io", "AgamaH", "jyotiSham", "mImAMsA", "rahaShTippanyaH", "vedAH_Rk", "bhAShAntaram", "kalpAntaram", "notes", "sanskrit", "vedAH_sAma", "devaH", "kannaDa", "pALi", "tipiTaka", "vedAH_yajuH", "vishvAsa.github.io"],
+  "vishvAsa": ["notes", "vishvAsa.github.io", "AgamaH", "AgamaH_vaiShNavaH", "AgamaH_brAhmaH", "AgamaH_shaivaH", "jyotiSham", "mImAMsA", "rahaShTippanyaH", "vedAH_Rk", "bhAShAntaram", "kalpAntaram", "notes", "sanskrit", "vedAH_sAma", "devaH", "kannaDa", "pALi", "tipiTaka", "vedAH_yajuH", "vishvAsa.github.io"],
   "vvasuki-git": ["vvasuki.github.io"]
 }
 
@@ -150,9 +150,9 @@ def clone_all_with_submods(groups=None, repos=None):
 
 if __name__ == '__main__':
   pass
-  # set_submodule_branches(sub_dirs=["raw_etexts"])
+  set_submodule_branches(sub_dirs=["AgamaH_brAhmaH", "AgamaH_shaivaH"])
   # set_submodule_branches()
-  clone_all_with_submods()
+  # clone_all_with_submods()
   # fsck_all()
   # pull_all()
   # reclone_all_with_submods()
