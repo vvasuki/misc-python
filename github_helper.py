@@ -16,7 +16,8 @@ website_repos = {
   "become-hindu": ["become-hindu.github.io",  ],
   "sanskrit": ["sanskrit.github.io", ],
   "sanskrit-coders": ["sanskrit-coders.github.io"] ,
-  "vishvAsa": ["notes", "vishvAsa.github.io", "AgamaH", "AgamaH_vaiShNavaH", "AgamaH_brAhmaH", "AgamaH_shaivaH", "jyotiSham", "mImAMsA", "rahaShTippanyaH", "vedAH_Rk", "bhAShAntaram", "kalpAntaram", "notes", "sanskrit", "vedAH_sAma", "devaH", "kannaDa", "pALi", "tipiTaka", "vedAH_yajuH", "vishvAsa.github.io"],
+  "subhAshita": ["subhAShita.github.io", "subhaashita_py", "sanskrit-couchdb", "app_pratimAlA", "app_pratimAlA_scala", ] ,
+  "vishvAsa": ["notes", "vishvAsa.github.io", "AgamaH", "AgamaH_vaiShNavaH", "AgamaH_brAhmaH", "AgamaH_shaivaH", "jyotiSham", "mImAMsA", "rahaShTippanyaH", "vedAH_Rk", "bhAShAntaram", "kalpAntaram", "kAvyam", "purANam", "purANam_vaiShNavam", "rAmAyaNam", "mahAbhAratam", "notes", "sanskrit", "vedAH_sAma", "devaH", "kannaDa", "pALi", "tipiTaka", "vedAH_yajuH", "vishvAsa.github.io"],
   "vvasuki-git": ["vvasuki.github.io"]
 }
 
@@ -33,7 +34,8 @@ reg_repos = {
                   "furniture", "misc-c", "rahah", "vlc-addons", 
                   "health", "misc-perl", "rahah-rare", 
                   "html-to-markdown", "misc-python", "step-install-packages", ],
-  "hindu-comm": ["weblogs", "mail_stream_indology", "mags", "mail_stream_advaita-l", "samskrita", "bvparishat"]
+  "hindu-comm": ["weblogs", "mail_stream_indology", "mags", "mail_stream_advaita-l", "samskrita", "bvparishat"],
+  "ambuda-org": ["vidyut", "vidyullekha"]
 }
 
 GIT_BASE = "/home/vvasuki/gitland"
@@ -118,10 +120,17 @@ def reclone_all_with_submods():
 
 
 def clone_repo(origin_url, dest_path):
-  command = f"git clone --recurse-submodules -b master {origin_url} {dest_path}"
-  logging.info(str(subprocess.check_output(
-    command,
-    stderr=subprocess.STDOUT, shell=True), 'utf-8'))
+  os.makedirs(os.path.dirname(dest_path), exist_ok=True)
+  default_branch_options = ["master", "main"]
+  for default_branch in default_branch_options:
+    try:
+      command = f"git clone --recurse-submodules -b {default_branch} {origin_url} {dest_path}"
+      logging.info(str(subprocess.check_output(
+        command,
+        stderr=subprocess.STDOUT, shell=True), 'utf-8'))
+      break
+    except subprocess.CalledProcessError as e:
+      logging.error(f"Failed with {default_branch}.", 'utf-8')
 
 
 def clone_all_with_submods(groups=None, repos=None):
@@ -150,9 +159,9 @@ def clone_all_with_submods(groups=None, repos=None):
 
 if __name__ == '__main__':
   pass
-  set_submodule_branches(sub_dirs=["AgamaH_brAhmaH", "AgamaH_shaivaH"])
+  # set_submodule_branches(sub_dirs=["AgamaH_brAhmaH", "AgamaH_shaivaH"])
   # set_submodule_branches()
-  # clone_all_with_submods()
+  clone_all_with_submods(groups=["ambuda-org"])
   # fsck_all()
   # pull_all()
   # reclone_all_with_submods()
