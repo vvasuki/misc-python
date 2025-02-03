@@ -160,8 +160,8 @@ def clone_all_with_submods(groups=None, repos=None):
 if __name__ == '__main__':
   pass
   # set_submodule_branches(sub_dirs=["AgamaH_brAhmaH", "AgamaH_shaivaH"])
-  # set_submodule_branches()
-  clone_all_with_submods(groups=["ambuda-org"])
+  set_submodule_branches(sub_dirs=["raw_etexts"])
+  # clone_all_with_submods(groups=["ambuda-org"])
   # fsck_all()
   # pull_all()
   # reclone_all_with_submods()
