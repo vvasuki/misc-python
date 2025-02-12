@@ -45,9 +45,17 @@ def force_site_rebuild():
   for group, repos in website_repos.items():
     for repo in repos:
       repo_path = os.path.join(GIT_BASE, group, repo)
-      logging.info(str(subprocess.check_output(
-        f'cd {repo_path} git commit --allow-empty -m "Force rebuild of site"',
-        stderr=subprocess.STDOUT, shell=True), 'utf-8'))
+      logging.info(str(subprocess.run(
+        f'cd {repo_path}; git commit --allow-empty -m "Force rebuild of site"', capture_output=True, text=True, shell=True), 'utf-8'))
+
+
+def run_command(command, check=False):
+  """Run a shell command and return the output."""
+  result = subprocess.run(command, shell=True, capture_output=True, text=True, check=check)
+  logging.info(f"{result}\nfrom {command}")
+  if result.returncode != 0:
+    logging.error(f"Command failed: {command}\n{result.stderr}")
+  return result.stdout.strip()
 
 
 def run_command_in_submodule_repos(command, sub_dirs=None):
@@ -63,9 +71,9 @@ def run_command_in_submodule_repos(command, sub_dirs=None):
       full_path = os.path.join(GIT_BASE, dir, sub_dir)
       if not os.path.exists(os.path.join(full_path, ".gitmodules")):
         continue
-      logging.info(str(subprocess.check_output(
-        f"cd {full_path}; {command}",
-        stderr=subprocess.STDOUT, shell=True), 'utf-8'))
+      result = subprocess.run(
+        f"cd {full_path}; {command}", capture_output=True, text=True, shell=True)
+      logging.info(f"{result}\nfrom {command}")
 
 
 def pull_all(sub_dirs=None):  
@@ -114,9 +122,8 @@ def reclone_all_with_submods():
       for f in os.listdir(full_path):
         if str(f).split(".")[-1] in ["ipr", "iml", "iws"]:
           shutil.copy(os.path.join(full_path, f), full_path_tmp)
-      logging.info(str(subprocess.check_output(
-        f"rm -rf {full_path}; mv {full_path_tmp} {full_path}",
-        stderr=subprocess.STDOUT, shell=True), 'utf-8'))
+      logging.info(str(subprocess.run(
+        f"rm -rf {full_path}; mv {full_path_tmp} {full_path}", capture_output=True, text=True, shell=True), 'utf-8'))
 
 
 def clone_repo(origin_url, dest_path):
@@ -125,9 +132,8 @@ def clone_repo(origin_url, dest_path):
   for default_branch in default_branch_options:
     try:
       command = f"git clone --recurse-submodules -b {default_branch} {origin_url} {dest_path}"
-      logging.info(str(subprocess.check_output(
-        command,
-        stderr=subprocess.STDOUT, shell=True), 'utf-8'))
+      logging.info(str(subprocess.run(
+        command, capture_output=True, text=True, shell=True), 'utf-8'))
       break
     except subprocess.CalledProcessError as e:
       logging.error(f"Failed with {default_branch}.", 'utf-8')
@@ -157,13 +163,6 @@ def clone_all_with_submods(groups=None, repos=None):
   _clone_all_in_dict(repo_dict=reg_repos)
 
 
-def run_command(command):
-  """Run a shell command and return the output."""
-  result = subprocess.run(command, shell=True, capture_output=True, text=True)
-  if result.returncode != 0:
-    print(f"Command failed: {command}\n{result.stderr}")
-  return result.stdout.strip()
-
 
 def get_modified_files():
   """Get the list of modified files."""
@@ -178,16 +177,23 @@ def add_commit_push(files):
   run_command(f"git add {file_list}")
   commit_message = f"Batch commit for files {files[0]} to {files[-1]}"
   run_command(f"git commit -m '{commit_message}'")
-  run_command("git push origin your-branch-name")
+  run_command("git push", check=True)
 
 
-def batch_and_push_modified():
+def batch_and_push_modified(dir_path):
   # Set the number of files to process per batch
-  BATCH_SIZE = 300
+  BATCH_SIZE = 100
+  MAX_SIZE_MB = 99
+  os.chdir(dir_path)
+  logging.info(f"Processing {dir_path}")
+  run_command("git reset")
   modified_files = get_modified_files()
+
+  filtered_files = [file for file in modified_files if os.path.getsize(os.path.join(dir_path, file)) <= MAX_SIZE_MB * 1024 * 1024]
+  logging.info(f"Got {len(modified_files)} modified files; filtered to {len(filtered_files)} files below {MAX_SIZE_MB} MB.")
   batch = []
 
-  for file in modified_files:
+  for file in filtered_files:
     batch.append(file)
     if len(batch) == BATCH_SIZE:
       add_commit_push(batch)
@@ -202,7 +208,8 @@ def batch_and_push_modified():
 if __name__ == '__main__':
   pass
   # set_submodule_branches(sub_dirs=["AgamaH_brAhmaH", "AgamaH_shaivaH"])
-  set_submodule_branches(sub_dirs=["raw_etexts"])
+  # set_submodule_branches(sub_dirs=["raw_etexts"])
+  batch_and_push_modified("/home/vvasuki/gitland/sanskrit/raw_etexts")
   # clone_all_with_submods(groups=["ambuda-org"])
   # fsck_all()
   # pull_all()
