@@ -157,6 +157,48 @@ def clone_all_with_submods(groups=None, repos=None):
   _clone_all_in_dict(repo_dict=reg_repos)
 
 
+def run_command(command):
+  """Run a shell command and return the output."""
+  result = subprocess.run(command, shell=True, capture_output=True, text=True)
+  if result.returncode != 0:
+    print(f"Command failed: {command}\n{result.stderr}")
+  return result.stdout.strip()
+
+
+def get_modified_files():
+  """Get the list of modified files."""
+  return run_command("git ls-files -m").splitlines()
+
+
+def add_commit_push(files):
+  """Stage, commit, and push a batch of files."""
+  if not files:
+    return
+  file_list = " ".join(files)
+  run_command(f"git add {file_list}")
+  commit_message = f"Batch commit for files {files[0]} to {files[-1]}"
+  run_command(f"git commit -m '{commit_message}'")
+  run_command("git push origin your-branch-name")
+
+
+def batch_and_push_modified():
+  # Set the number of files to process per batch
+  BATCH_SIZE = 300
+  modified_files = get_modified_files()
+  batch = []
+
+  for file in modified_files:
+    batch.append(file)
+    if len(batch) == BATCH_SIZE:
+      add_commit_push(batch)
+      batch = []
+
+  # Process any remaining files
+  if batch:
+    add_commit_push(batch)
+
+
+
 if __name__ == '__main__':
   pass
   # set_submodule_branches(sub_dirs=["AgamaH_brAhmaH", "AgamaH_shaivaH"])
