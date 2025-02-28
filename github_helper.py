@@ -18,7 +18,8 @@ website_repos = {
   "sanskrit-coders": ["sanskrit-coders.github.io"] ,
   "subhAshita": ["subhAShita.github.io", "subhaashita_py", "sanskrit-couchdb", "app_pratimAlA", "app_pratimAlA_scala", ] ,
   "vishvAsa": ["notes", "vishvAsa.github.io", "AgamaH", "AgamaH_vaiShNavaH", "AgamaH_brAhmaH", "AgamaH_shaivaH", "jyotiSham", "mImAMsA", "rahaShTippanyaH", "vedAH_Rk", "bhAShAntaram", "kalpAntaram", "kAvyam", "purANam", "purANam_vaiShNavam", "rAmAyaNam", "mahAbhAratam", "notes", "sanskrit", "vedAH_sAma", "devaH", "kannaDa", "pALi", "tipiTaka", "vedAH_yajuH", "vishvAsa.github.io"],
-  "vvasuki-git": ["vvasuki.github.io"]
+  "vvasuki-git": ["vvasuki.github.io"],
+  "xetram": ["xetram.github.io"]
 }
 
 reg_repos = {
@@ -45,8 +46,7 @@ def force_site_rebuild():
   for group, repos in website_repos.items():
     for repo in repos:
       repo_path = os.path.join(GIT_BASE, group, repo)
-      logging.info(str(subprocess.run(
-        f'cd {repo_path}; git commit --allow-empty -m "Force rebuild of site"', capture_output=True, text=True, shell=True), 'utf-8'))
+      run_command(command=f'cd {repo_path}; git commit --allow-empty -m "Force rebuild of site"')
 
 
 def run_command(command, check=False):
@@ -71,9 +71,7 @@ def run_command_in_submodule_repos(command, sub_dirs=None):
       full_path = os.path.join(GIT_BASE, dir, sub_dir)
       if not os.path.exists(os.path.join(full_path, ".gitmodules")):
         continue
-      result = subprocess.run(
-        f"cd {full_path}; {command}", capture_output=True, text=True, shell=True)
-      logging.info(f"{result}\nfrom {command}")
+      run_command(f"cd {full_path}; {command}")
 
 
 def pull_all(sub_dirs=None):  
@@ -122,8 +120,7 @@ def reclone_all_with_submods():
       for f in os.listdir(full_path):
         if str(f).split(".")[-1] in ["ipr", "iml", "iws"]:
           shutil.copy(os.path.join(full_path, f), full_path_tmp)
-      logging.info(str(subprocess.run(
-        f"rm -rf {full_path}; mv {full_path_tmp} {full_path}", capture_output=True, text=True, shell=True), 'utf-8'))
+      run_command(command=f"rm -rf {full_path}; mv {full_path_tmp} {full_path}", check=True)
 
 
 def clone_repo(origin_url, dest_path):
@@ -132,8 +129,7 @@ def clone_repo(origin_url, dest_path):
   for default_branch in default_branch_options:
     try:
       command = f"git clone --recurse-submodules -b {default_branch} {origin_url} {dest_path}"
-      logging.info(str(subprocess.run(
-        command, capture_output=True, text=True, shell=True), 'utf-8'))
+      run_command(command=command, check=True)
       break
     except subprocess.CalledProcessError as e:
       logging.error(f"Failed with {default_branch}.", 'utf-8')
@@ -208,9 +204,9 @@ def batch_and_push_modified(dir_path):
 if __name__ == '__main__':
   pass
   # set_submodule_branches(sub_dirs=["AgamaH_brAhmaH", "AgamaH_shaivaH"])
-  # set_submodule_branches(sub_dirs=["raw_etexts"])
-  batch_and_push_modified("/home/vvasuki/gitland/sanskrit/raw_etexts")
-  # clone_all_with_submods(groups=["ambuda-org"])
+  set_submodule_branches(sub_dirs=["raw_etexts"])
+  # batch_and_push_modified("/home/vvasuki/gitland/sanskrit/raw_etexts")
+  # clone_all_with_submods(groups=["xetram"])
   # fsck_all()
   # pull_all()
   # reclone_all_with_submods()
