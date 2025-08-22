@@ -3,6 +3,7 @@ import logging
 import os.path
 import shutil
 import subprocess
+from os import chdir
 
 # Remove all handlers associated with the root logger object.
 for handler in logging.root.handlers[:]:
@@ -17,7 +18,7 @@ website_repos = {
   "sanskrit": ["sanskrit.github.io", ],
   "sanskrit-coders": ["sanskrit-coders.github.io"] ,
   "subhAshita": ["subhAShita.github.io", "subhaashita_py", "sanskrit-couchdb", "app_pratimAlA", "app_pratimAlA_scala", ] ,
-  "vishvAsa": ["notes", "vishvAsa.github.io", "AgamaH", "AgamaH_vaiShNavaH", "AgamaH_brAhmaH", "AgamaH_shaivaH", "jyotiSham", "mImAMsA", "rahaShTippanyaH", "vedAH_Rk", "bhAShAntaram", "kalpAntaram", "kAvyam", "purANam", "purANam_vaiShNavam", "rAmAyaNam", "mahAbhAratam", "notes", "sanskrit", "vedAH_sAma", "devaH", "kannaDa", "pALi", "tipiTaka", "vedAH_yajuH", "vishvAsa.github.io"],
+  "vishvAsa": ["notes", "vishvAsa.github.io", "AgamaH", "AgamaH_vaiShNavaH", "AgamaH_brAhmaH", "AgamaH_shaivaH", "jyotiSham", "mImAMsA", "rahaShTippanyaH", "vedAH_Rk", "bhAShAntaram", "kalpAntaram", "kAvyam", "purANam", "purANam_vaiShNavam", "rAmAyaNam", "rAmAnujIyam", "mAdhvam", "mahAbhAratam", "notes", "sanskrit", "vedAH_sAma", "devaH", "kannaDa", "pALi", "tipiTaka", "vedAH_yajuH", "vishvAsa.github.io"],
   "vvasuki-git": ["vvasuki.github.io"],
   "xetram": ["xetram.github.io"]
 }
@@ -200,11 +201,39 @@ def batch_and_push_modified(dir_path):
     add_commit_push(batch)
 
 
+def update_workflow_files(source_dir, file_path, base_dir="/home/vvasuki/gitland/vishvAsa"):
+  os.chdir(base_dir)
+  src_file = os.path.join(source_dir, file_path)
+  for entry in os.listdir('.'):
+    if os.path.isdir(entry) and entry != source_dir:
+      target_file = os.path.join(entry, file_path)
+      target_dir = os.path.dirname(target_file)
+      content_dir = os.path.join(entry, "content/.github/workflows")
+      if os.path.isdir(target_dir) and os.path.isdir(content_dir):
+        try:
+          shutil.copy2(src_file, target_file)
+          print(f"Copied to {target_file}")
+        except Exception as e:
+          print(f"Failed to copy to {target_file}: {e}")
+
+
+def run_command_in_subdirs_with_content_mod(  command):
+  base_dir="/home/vvasuki/gitland/vishvAsa"
+  os.chdir(base_dir)
+  for entry in os.listdir('.'):
+    if os.path.isdir(entry):
+      target_dir = os.path.join(entry, "content/.github/workflows")
+      if os.path.isdir(target_dir):
+        run_command(command=command % entry, check=True)
+
 
 if __name__ == '__main__':
   pass
   # set_submodule_branches(sub_dirs=["AgamaH_brAhmaH", "AgamaH_shaivaH"])
-  set_submodule_branches(sub_dirs=["raw_etexts"])
+  # set_submodule_branches(sub_dirs=["raw_etexts"])
+  # run_command_in_subdirs_with_content_mod(command="gh api -X PATCH /repos/vishvAsa/%s -F default_branch=content")
+  # run_command_in_subdirs_with_content_mod(command="rm %s/.github/workflows/index_pages.yml")
+  # update_workflow_files(source_dir="vedAH_Rk", file_path=".github/workflows/build.yml")
   # batch_and_push_modified("/home/vvasuki/gitland/sanskrit/raw_etexts")
   # clone_all_with_submods(groups=["xetram"])
   # fsck_all()
