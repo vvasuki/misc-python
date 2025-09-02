@@ -227,10 +227,22 @@ def run_command_in_subdirs_with_content_mod(  command):
         run_command(command=command % entry, check=True)
 
 
+def run_command_in_subdirs_without_content_mod(  command):
+  base_dir="/home/vvasuki/gitland/vishvAsa"
+  os.chdir(base_dir)
+  for entry in os.listdir('.'):
+    if os.path.isdir(entry):
+      target_dir = os.path.join(entry, "content/.github/workflows")
+      if not os.path.isdir(target_dir):
+        run_command(command=command % entry, check=True)
+
+
+
 if __name__ == '__main__':
   pass
   # set_submodule_branches(sub_dirs=["AgamaH_brAhmaH", "AgamaH_shaivaH"])
   # set_submodule_branches(sub_dirs=["raw_etexts"])
+  run_command_in_subdirs_without_content_mod("ls %s")
   # run_command_in_subdirs_with_content_mod(command="gh api -X PATCH /repos/vishvAsa/%s -F default_branch=content")
   # run_command_in_subdirs_with_content_mod(command="rm %s/.github/workflows/index_pages.yml")
   # update_workflow_files(source_dir="vedAH_Rk", file_path=".github/workflows/build.yml")
